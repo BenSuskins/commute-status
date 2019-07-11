@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        updateStatus();
+        updateTrainTimes();
     }
 
     @Override
@@ -36,10 +36,15 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_refresh) {
+            updateTrainTimes();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
-    public void updateStatus() {
+    public void updateTrainTimes() {
         //Updates the Text Views
         //Hockley Text Views
         TextView hockleyTime = findViewById(R.id.hockley_time);
@@ -51,39 +56,11 @@ public class MainActivity extends AppCompatActivity {
 
 
         //Update the Time and Status values
-        updateHockley(hockleyTime, hockleyStatus);
-        updateStratford(stratfordTime, stratfordStatus);
+        //updateTime(hockleyTime, stratfordTime);
+        //updateStatus(hockleyStatus, stratfordStatus);
 
         //Update the background colours
         updateColor(hockleyStatus, stratfordStatus);
-    }
-
-    private void updateStratford(TextView stratfordTime, TextView stratfordStatus) {
-        updateStratfordTime(stratfordTime);
-        updateStratfordStatus(stratfordStatus);
-    }
-
-    private void updateHockley(TextView hockleyTime, TextView hockleyStatus) {
-        updateHockleyTime(hockleyTime);
-        updateHockleyStatus(hockleyStatus);
-    }
-
-    private void updateHockleyTime(TextView hockleyTime) {
-        //todo
-    }
-
-    private void updateStratfordTime(TextView stratfordTime) {
-        //todo
-    }
-
-    private void updateStratfordStatus(TextView stratfordStatus) {
-        //todo
-        stratfordStatus.setText(R.string.train_status_cancelled);
-    }
-
-    private void updateHockleyStatus(TextView hockleyStatus) {
-        //todo
-        hockleyStatus.setText(R.string.train_status_on_time);
     }
 
     private void updateColor(TextView hockleyStatus, TextView stratfordStatus) {
