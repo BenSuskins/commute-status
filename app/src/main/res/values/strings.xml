@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Commute Status</string>
+    <string name="action_settings">Settings</string>
+    <string name="text_to_hockley">Train To Hockley: </string>
+    <string name="text_to_stratford">Train To Stratford: </string>
+    <string name="train_status_on_time">On Time</string>
+    <string name="train_status_delayed">Delayed</string>
+    <string name="train_status_cancelled">Cancelled</string>
+</resources>
