@@ -60,10 +60,10 @@ public class MainActivity extends AppCompatActivity {
         //updateStatus(hockleyStatus, stratfordStatus);
 
         //Update the background colours
-        updateColor(hockleyStatus, stratfordStatus);
+        updateColours(hockleyStatus, stratfordStatus);
     }
 
-    private void updateColor(TextView hockleyStatus, TextView stratfordStatus) {
+    private void updateColours(TextView hockleyStatus, TextView stratfordStatus) {
         List<TextView> statuses = new LinkedList<>();
         statuses.add(hockleyStatus);
         statuses.add(stratfordStatus);
