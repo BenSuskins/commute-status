@@ -8,5 +8,5 @@
     <color name="colorOnTime">#8BC34A</color>
     <color name="colorDelayed">#FF5722</color>
     <color name="colorCancelled">#F44336</color>
-    <color name="colorText">#494949</color>
+    <color name="colorMenuItemDark">#2C2C2C</color>
 </resources>
