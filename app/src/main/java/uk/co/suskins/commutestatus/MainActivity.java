@@ -8,19 +8,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import org.ksoap2.serialization.SoapObject;
-
-import java.util.LinkedList;
-import java.util.List;
-
-import static android.provider.ContactsContract.CommonDataKinds.Identity.NAMESPACE;
-
 public class MainActivity extends AppCompatActivity {
-    private final String API_URL = "https://lite.realtime.nationalrail.co.uk/OpenLDBWS/ldb11.asmx";
-    private final String HOC_TO_SRA = "";
-    private final String SRA_TO_HOC = "";
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,28 +53,11 @@ public class MainActivity extends AppCompatActivity {
 
         //Update the Time and Status values
         //updateTime(hockleyTime, stratfordTime);
+
+        //Time should be set to the STD
+        //Status should be set to the ETD - On Time or Delayed Time
+
         //updateStatus(hockleyStatus, stratfordStatus);
-
-        //Update the background colours
-        updateColours(hockleyStatus, stratfordStatus);
     }
 
-    private void updateColours(TextView hockleyStatus, TextView stratfordStatus) {
-        List<TextView> statuses = new LinkedList<>();
-        statuses.add(hockleyStatus);
-        statuses.add(stratfordStatus);
-
-        for (TextView status : statuses) {
-            if (status.getText().equals(getString(R.string.train_status_on_time))) {
-                status.setBackgroundColor(getResources().getColor(R.color.colorOnTime));
-            } else if (status.getText().equals(getString(R.string.train_status_cancelled))) {
-                status.setBackgroundColor(getResources().getColor(R.color.colorCancelled));
-            } else if (status.getText().equals(getString(R.string.train_status_delayed))) {
-                status.setBackgroundColor(getResources().getColor(R.color.colorDelayed));
-            }
-        }
-    }
-
-    private void callAPI() {
-    }
 }

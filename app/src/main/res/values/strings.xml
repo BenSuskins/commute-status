@@ -5,8 +5,8 @@
     <string name="to_hockley">Train To Hockley: </string>
     <string name="to_stratford">Train To Stratford: </string>
     <string name="train_status_on_time">On Time</string>
-    <string name="train_status_delayed">Delayed</string>
-    <string name="train_status_cancelled">Cancelled</string>
-    <string name="stratford_time">16:02</string>
-    <string name="hockley_time">14:22</string>
+    <string name="train_status_delay_hockley">Delayed</string>
+    <string name="train_status_delay_stratford">Delayed</string>
+    <string name="stratford_std">16:02</string>
+    <string name="hockley_std">14:22</string>
 </resources>
