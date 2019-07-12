@@ -8,10 +8,18 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import org.ksoap2.serialization.SoapObject;
+
 import java.util.LinkedList;
 import java.util.List;
 
+import static android.provider.ContactsContract.CommonDataKinds.Identity.NAMESPACE;
+
 public class MainActivity extends AppCompatActivity {
+    private final String API_URL = "https://lite.realtime.nationalrail.co.uk/OpenLDBWS/ldb11.asmx";
+    private final String HOC_TO_SRA = "";
+    private final String SRA_TO_HOC = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void updateTrainTimes() {
+    private void updateTrainTimes() {
         //Updates the Text Views
         //Hockley Text Views
         TextView hockleyTime = findViewById(R.id.hockley_time);
@@ -77,5 +85,8 @@ public class MainActivity extends AppCompatActivity {
                 status.setBackgroundColor(getResources().getColor(R.color.colorDelayed));
             }
         }
+    }
+
+    private void callAPI() {
     }
 }
