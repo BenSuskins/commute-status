@@ -1,12 +1,13 @@
 <resources>
-    <string name="app_name">Commute Status</string>
-    <string name="action_settings">Settings</string>
+    <string name="app_name">CommuteStatus</string>
     <string name="action_refresh">Refresh</string>
-    <string name="to_hockley">Train To Hockley: </string>
-    <string name="to_stratford">Train To Stratford: </string>
-    <string name="train_status_on_time">On Time</string>
-    <string name="train_status_delay_hockley">Delayed</string>
-    <string name="train_status_delay_stratford">Delayed</string>
-    <string name="stratford_std">16:02</string>
-    <string name="hockley_std">14:22</string>
+    <string name="action_next">Toggle Trains</string>
+    <string name="action_journeycheck">Journey Check</string>
+
+    <string name="text_to_hockley">%1$s to Home</string>
+    <string name="text_to_stratford">%1$s to Work</string>
+    <string name="text_platform_stratford">%1$s</string>
+    <string name="text_platform_hockley">%1$s</string>
+    <string name="text_status_hockley">%1$s</string>
+    <string name="text_status_stratford">%1$s</string>
 </resources>
