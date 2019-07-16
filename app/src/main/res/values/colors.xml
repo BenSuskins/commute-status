@@ -6,5 +6,5 @@
 
     <color name="colorOnTime">#8BC34A</color>
     <color name="colorCancelled">#F44336</color>
-    <color name="colorDelayed">#FF5722</color>
+    <color name="colorDelayed">#FF6D00</color>
 </resources>
