@@ -4,4 +4,4 @@ Simple Android app to show the status of the next 2 trains for my commute.
 Using National Rail Enquiries Darwin API to provide the train times and statues.
 
 ## Screenshot
-![alt text](/docs/screenshot.png?raw=true "App Screenshot")
+![alt text](/docs/screenshot.jpg?raw=true "App Screenshot")
