@@ -4,6 +4,9 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
 
+    <color name="colorText">#FFFFFF</color>
+    <color name="colorBackground">#000000</color>
+
     <color name="colorOnTime">#8BC34A</color>
     <color name="colorCancelled">#F44336</color>
     <color name="colorDelayed">#FF6D00</color>
