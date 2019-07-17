@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
             stratfordPlatform.setText(getString(R.string.text_platform_stratford, data.cancelReason + "."));
         } else {
             stratfordStatus.setText(getString(R.string.text_status_stratford, data.etd));
-            stratfordPlatform.setTextSize(50);
+            stratfordPlatform.setTextSize(55);
             stratfordPlatform.setText(getString(R.string.text_platform_stratford, "Platform " + data.platform));
         }
 
@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
             hockleyPlatform.setText(getString(R.string.text_platform_hockley, data.cancelReason + "."));
         } else {
             hockleyStatus.setText(getString(R.string.text_status_hockley, data.etd));
-            hockleyPlatform.setTextSize(50);
+            hockleyPlatform.setTextSize(55);
             hockleyPlatform.setText(getString(R.string.text_platform_hockley, "Platform " + data.platform));
         }
 

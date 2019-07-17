@@ -1,6 +1,6 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_padding">5sp</dimen>
-    <dimen name="text_header">60sp</dimen>
-    <dimen name="text_content">50sp</dimen>
+    <dimen name="text_header">65sp</dimen>
+    <dimen name="text_content">55sp</dimen>
 </resources>
