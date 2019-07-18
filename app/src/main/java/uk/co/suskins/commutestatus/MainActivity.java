@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String ON_TIME = "On time";
     private ALRArrayOfServiceItemsWithCallingPoints_2 hockleyDetails;
     private ALRArrayOfServiceItemsWithCallingPoints_2 stratfordDetails;
-    private Integer index = 0;
+    private Integer index = 0; //todo check this index is accessible
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
