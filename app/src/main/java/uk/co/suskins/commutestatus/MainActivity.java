@@ -1,7 +1,10 @@
 package uk.co.suskins.commutestatus;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
@@ -12,6 +15,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import uk.co.suskins.darwin.ALRAccessToken;
 import uk.co.suskins.darwin.ALRArrayOfServiceItemsWithCallingPoints_2;
@@ -24,9 +29,12 @@ public class MainActivity extends AppCompatActivity {
     //Constants
     private static final String CANCELLED = "Cancelled";
     private static final String ON_TIME = "On time";
+    private static final String CHANNEL_ID = "Updates";
     private ALRArrayOfServiceItemsWithCallingPoints_2 hockleyDetails;
     private ALRArrayOfServiceItemsWithCallingPoints_2 stratfordDetails;
-    private Integer index = 0; //todo check this index is accessible
+    private Integer index = 0;
+    private int notificationId = 0;
+    private NotificationManagerCompat notificationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +47,13 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
+        //Create Notification Channel
+        createNotificationChannel();
+        notificationManager = NotificationManagerCompat.from(this);
+
         //Update App Text
         refresh();
+        //sendNotif();
     }
 
     @Override
@@ -71,6 +84,40 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.channel_name);
+            String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    public void sendNotif() {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setContentTitle("Train Time Update")
+                .setContentText("The next train to Stratford is " + stratfordDetails.get(0).etd)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        notificationManager.notify(notificationId++, builder.build());
+
+        builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setContentTitle("Train Time Update")
+                .setContentText("The next train to Hockley is " + hockleyDetails.get(0).etd)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        notificationManager.notify(notificationId++, builder.build());
+    }
+
     private void refresh() {
         getToHockleyDetails();
         getToStratfordDetails();
@@ -81,11 +128,11 @@ public class MainActivity extends AppCompatActivity {
     private void update() {
         Log.i("Update", "index is " + index);
         //Check that index is accessible
-        if (!(hockleyDetails.size() <= index)){
+        if (!(hockleyDetails.size() <= index)) {
             updateToHockley();
         }
 
-        if (!(stratfordDetails.size() <= index)){
+        if (!(stratfordDetails.size() <= index)) {
             updateToStratford();
         }
     }

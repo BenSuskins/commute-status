@@ -10,4 +10,6 @@
     <string name="text_platform_hockley">%1$s</string>
     <string name="text_status_hockley">%1$s</string>
     <string name="text_status_stratford">%1$s</string>
+    <string name="channel_name">Train updates</string>
+    <string name="channel_description">Updates on current train statuses</string>
 </resources>

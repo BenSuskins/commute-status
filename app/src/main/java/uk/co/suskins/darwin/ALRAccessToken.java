@@ -19,7 +19,7 @@ import java.util.Hashtable;
 
 public class ALRAccessToken extends AttributeContainer implements KvmSerializable {
     //Todo set AccessToken
-    public String TokenValue = "d4067cf1-fec4-4a44-8bd0-b621feee6575";
+    public String TokenValue = "xxx";
 
     private transient java.lang.Object __source;
 
