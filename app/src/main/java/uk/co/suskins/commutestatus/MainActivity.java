@@ -66,9 +66,6 @@ public class MainActivity extends AppCompatActivity {
             Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
             startActivity(launchBrowser);
             return true;
-        } else if (id == R.id.action_toggle) {
-            toggleTrains();
-            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -82,17 +79,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void update() {
-        updateToHockley();
-        updateToStratford();
-    }
+        Log.i("Update", "index is " + index);
+        //Check that index is accessible
+        if (!(hockleyDetails.size() <= index)){
+            updateToHockley();
+        }
 
-    private void toggleTrains() {
-        if (index == 0) {
-            index = 1;
-            update();
-        } else if (index == 1) {
-            index = 0;
-            update();
+        if (!(stratfordDetails.size() <= index)){
+            updateToStratford();
         }
     }
 
@@ -119,9 +113,6 @@ public class MainActivity extends AppCompatActivity {
     private void updateToStratford() {
         //Get Data
         ALRServiceItemWithCallingPoints_2 data = stratfordDetails.get(index);
-        //Log Data
-        Log.d("To Stratford", data.toString());
-
         //Create Variables
         TextView stratfordTime = findViewById(R.id.stratfordTime);
         TextView stratfordStatus = findViewById(R.id.stratfordStatus);
@@ -138,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             stratfordStatus.setText(getString(R.string.text_status_stratford, data.etd));
             stratfordPlatform.setTextSize(55);
-            if (data.platform == null){
+            if (data.platform == null) {
                 stratfordPlatform.setText(getString(R.string.text_platform_hockley, "Platform Unknown"));
             }
             stratfordPlatform.setText(getString(R.string.text_platform_stratford, "Platform " + data.platform));
@@ -157,8 +148,6 @@ public class MainActivity extends AppCompatActivity {
     private void updateToHockley() {
         //Get Data
         ALRServiceItemWithCallingPoints_2 data = hockleyDetails.get(index);
-        //Log Data
-        Log.d("To Hockley", data.toString());
 
         //Create Variables
         TextView hockleyTime = findViewById(R.id.hockleyTime);
@@ -176,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             hockleyStatus.setText(getString(R.string.text_status_hockley, data.etd));
             hockleyPlatform.setTextSize(55);
-            if (data.platform == null){
+            if (data.platform == null) {
                 hockleyPlatform.setText(getString(R.string.text_platform_hockley, "Platform Unknown"));
             }
             hockleyPlatform.setText(getString(R.string.text_platform_hockley, "Platform " + data.platform));
@@ -193,6 +182,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void toggleTrains(View view) {
+        Log.d("Toggle", "button press");
         if (index == 0) {
             index = 1;
             update();
