@@ -127,14 +127,17 @@ public class MainActivity extends AppCompatActivity {
 
     private void update() {
         Log.i("Update", "index is " + index);
-        //Check that index is accessible
-        if (!(hockleyDetails.size() <= index)) {
-            updateToHockley();
+        updateToHockley();
+        updateToStratford();
+
+    }
+
+    private boolean detailsInvalid(ALRArrayOfServiceItemsWithCallingPoints_2 details) {
+        if (details == null) {
+            return true;
         }
 
-        if (!(stratfordDetails.size() <= index)) {
-            updateToStratford();
-        }
+        return (details.size() <= index);
     }
 
     private void getToHockleyDetails() {
@@ -158,74 +161,107 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateToStratford() {
-        //Get Data
-        ALRServiceItemWithCallingPoints_2 data = stratfordDetails.get(index);
-        //Create Variables
-        TextView stratfordTime = findViewById(R.id.stratfordTime);
-        TextView stratfordStatus = findViewById(R.id.stratfordStatus);
-        TextView stratfordPlatform = findViewById(R.id.stratfordPlatform);
-
-        //Set Scheduled Time of Departure
-        stratfordTime.setText(getString(R.string.text_to_stratford, data.std));
-
-        //Set Status (Cancelled or Estimated Time of Departure)
-        if (data.filterLocationCancelled) {
-            stratfordStatus.setText(getString(R.string.text_status_stratford, CANCELLED));
-            stratfordPlatform.setTextSize(20);
-            stratfordPlatform.setText(getString(R.string.text_platform_stratford, data.cancelReason + "."));
+        //Check Details Valid
+        if (detailsInvalid(stratfordDetails)) {
+            noTrainsStratford();
         } else {
-            stratfordStatus.setText(getString(R.string.text_status_stratford, data.etd));
-            stratfordPlatform.setTextSize(55);
-            if (data.platform == null) {
-                stratfordPlatform.setText(getString(R.string.text_platform_hockley, "Platform Unknown"));
+
+            //Get Data
+            ALRServiceItemWithCallingPoints_2 data = stratfordDetails.get(index);
+
+            //Create Variables
+            TextView stratfordTime = findViewById(R.id.stratfordTime);
+            TextView stratfordStatus = findViewById(R.id.stratfordStatus);
+            TextView stratfordPlatform = findViewById(R.id.stratfordPlatform);
+
+            //Set Scheduled Time of Departure
+            stratfordTime.setText(getString(R.string.text_to_stratford, data.std));
+
+            //Set Status (Cancelled or Estimated Time of Departure)
+            if (data.filterLocationCancelled) {
+                stratfordStatus.setText(getString(R.string.text_status_stratford, CANCELLED));
+                stratfordPlatform.setTextSize(20);
+                stratfordPlatform.setText(getString(R.string.text_platform_stratford, data.cancelReason + "."));
+            } else {
+                stratfordStatus.setText(getString(R.string.text_status_stratford, data.etd));
+                stratfordPlatform.setTextSize(55);
+                if (data.platform == null) {
+                    stratfordPlatform.setText(getString(R.string.text_platform_hockley, "Platform Unknown"));
+                }
+                stratfordPlatform.setText(getString(R.string.text_platform_stratford, "Platform " + data.platform));
             }
-            stratfordPlatform.setText(getString(R.string.text_platform_stratford, "Platform " + data.platform));
-        }
 
-        //Update Background Colour
-        if (stratfordStatus.getText().equals(CANCELLED)) {
-            stratfordStatus.setBackgroundColor(getColor(R.color.colorCancelled));
-        } else if (stratfordStatus.getText().equals(ON_TIME)) {
-            stratfordStatus.setBackgroundColor(getColor(R.color.colorOnTime));
-        } else {
-            stratfordStatus.setBackgroundColor(getColor(R.color.colorDelayed));
+            //Update Background Colour
+            if (stratfordStatus.getText().equals(CANCELLED)) {
+                stratfordStatus.setBackgroundColor(getColor(R.color.colorCancelled));
+            } else if (stratfordStatus.getText().equals(ON_TIME)) {
+                stratfordStatus.setBackgroundColor(getColor(R.color.colorOnTime));
+            } else {
+                stratfordStatus.setBackgroundColor(getColor(R.color.colorDelayed));
+            }
         }
     }
 
-    private void updateToHockley() {
-        //Get Data
-        ALRServiceItemWithCallingPoints_2 data = hockleyDetails.get(index);
+    private void noTrainsStratford() {
+        //Update Stratford
+        TextView stratfordTime = findViewById(R.id.stratfordTime);
+        TextView stratfordStatus = findViewById(R.id.stratfordStatus);
+        TextView stratfordPlatform = findViewById(R.id.stratfordPlatform);
+        stratfordTime.setText(getString(R.string.text_to_stratford, "No Trains"));
+        stratfordStatus.setText(getString(R.string.text_status_stratford, ""));
+        stratfordPlatform.setText(getString(R.string.text_platform_stratford, ""));
+    }
 
-        //Create Variables
+    private void updateToHockley() {
+        //Check Details Valid
+        if (detailsInvalid(hockleyDetails)) {
+            noTrainsHockley();
+        } else {
+
+            //Get Data
+            ALRServiceItemWithCallingPoints_2 data = hockleyDetails.get(index);
+
+            //Create Variables
+            TextView hockleyTime = findViewById(R.id.hockleyTime);
+            TextView hockleyPlatform = findViewById(R.id.hockleyPlatform);
+            TextView hockleyStatus = findViewById(R.id.hockleyStatus);
+
+            //Set Scheduled Time of Departure
+            hockleyTime.setText(getString(R.string.text_to_hockley, data.std));
+
+            //Set Status (Cancelled or Estimated Time of Departure)
+            if (data.filterLocationCancelled) {
+                hockleyStatus.setText(getString(R.string.text_status_hockley, CANCELLED));
+                hockleyPlatform.setTextSize(20);
+                hockleyPlatform.setText(getString(R.string.text_platform_hockley, data.cancelReason + "."));
+            } else {
+                hockleyStatus.setText(getString(R.string.text_status_hockley, data.etd));
+                hockleyPlatform.setTextSize(55);
+                if (data.platform == null) {
+                    hockleyPlatform.setText(getString(R.string.text_platform_hockley, "Platform Unknown"));
+                }
+                hockleyPlatform.setText(getString(R.string.text_platform_hockley, "Platform " + data.platform));
+            }
+
+            //Update Background Colour
+            if (hockleyStatus.getText().equals(CANCELLED)) {
+                hockleyStatus.setBackgroundColor(getColor(R.color.colorCancelled));
+            } else if (hockleyStatus.getText().equals(ON_TIME)) {
+                hockleyStatus.setBackgroundColor(getColor(R.color.colorOnTime));
+            } else {
+                hockleyStatus.setBackgroundColor(getColor(R.color.colorDelayed));
+            }
+        }
+    }
+
+    private void noTrainsHockley() {
+        //Update Hockley
         TextView hockleyTime = findViewById(R.id.hockleyTime);
         TextView hockleyPlatform = findViewById(R.id.hockleyPlatform);
         TextView hockleyStatus = findViewById(R.id.hockleyStatus);
-
-        //Set Scheduled Time of Departure
-        hockleyTime.setText(getString(R.string.text_to_hockley, data.std));
-
-        //Set Status (Cancelled or Estimated Time of Departure)
-        if (data.filterLocationCancelled) {
-            hockleyStatus.setText(getString(R.string.text_status_hockley, CANCELLED));
-            hockleyPlatform.setTextSize(20);
-            hockleyPlatform.setText(getString(R.string.text_platform_hockley, data.cancelReason + "."));
-        } else {
-            hockleyStatus.setText(getString(R.string.text_status_hockley, data.etd));
-            hockleyPlatform.setTextSize(55);
-            if (data.platform == null) {
-                hockleyPlatform.setText(getString(R.string.text_platform_hockley, "Platform Unknown"));
-            }
-            hockleyPlatform.setText(getString(R.string.text_platform_hockley, "Platform " + data.platform));
-        }
-
-        //Update Background Colour
-        if (hockleyStatus.getText().equals(CANCELLED)) {
-            hockleyStatus.setBackgroundColor(getColor(R.color.colorCancelled));
-        } else if (hockleyStatus.getText().equals(ON_TIME)) {
-            hockleyStatus.setBackgroundColor(getColor(R.color.colorOnTime));
-        } else {
-            hockleyStatus.setBackgroundColor(getColor(R.color.colorDelayed));
-        }
+        hockleyTime.setText(getString(R.string.text_to_hockley, "No Trains"));
+        hockleyStatus.setText(getString(R.string.text_status_hockley, ""));
+        hockleyPlatform.setText(getString(R.string.text_platform_hockley, ""));
     }
 
     public void toggleTrains(View view) {
