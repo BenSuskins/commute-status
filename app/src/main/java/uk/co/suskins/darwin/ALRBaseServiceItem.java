@@ -35,7 +35,7 @@ public class ALRBaseServiceItem extends AttributeContainer implements KvmSeriali
 
     public Boolean isCircularRoute;
 
-    public Boolean isCancelled;
+    public Boolean isCancelled = false;
 
     public Boolean filterLocationCancelled = false;
 

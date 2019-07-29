@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String CANCELLED = "Cancelled";
     private static final String ON_TIME = "On time";
     private static final String CHANNEL_ID = "Updates";
+
+    //Variables
     private ALRArrayOfServiceItemsWithCallingPoints_2 hockleyDetails;
     private ALRArrayOfServiceItemsWithCallingPoints_2 stratfordDetails;
     private Integer index = 0;
@@ -126,7 +128,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void update() {
-        Log.i("Update", "index is " + index);
         updateToHockley();
         updateToStratford();
 
@@ -165,7 +166,6 @@ public class MainActivity extends AppCompatActivity {
         if (detailsInvalid(stratfordDetails)) {
             noTrainsStratford();
         } else {
-
             //Get Data
             ALRServiceItemWithCallingPoints_2 data = stratfordDetails.get(index);
 
@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
             stratfordTime.setText(getString(R.string.text_to_stratford, data.std));
 
             //Set Status (Cancelled or Estimated Time of Departure)
-            if (data.filterLocationCancelled) {
+            if (data.filterLocationCancelled || data.isCancelled) {
                 stratfordStatus.setText(getString(R.string.text_status_stratford, CANCELLED));
                 stratfordPlatform.setTextSize(20);
                 stratfordPlatform.setText(getString(R.string.text_platform_stratford, data.cancelReason + "."));
@@ -217,7 +217,6 @@ public class MainActivity extends AppCompatActivity {
         if (detailsInvalid(hockleyDetails)) {
             noTrainsHockley();
         } else {
-
             //Get Data
             ALRServiceItemWithCallingPoints_2 data = hockleyDetails.get(index);
 
@@ -230,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
             hockleyTime.setText(getString(R.string.text_to_hockley, data.std));
 
             //Set Status (Cancelled or Estimated Time of Departure)
-            if (data.filterLocationCancelled) {
+            if (data.filterLocationCancelled || data.isCancelled) {
                 hockleyStatus.setText(getString(R.string.text_status_hockley, CANCELLED));
                 hockleyPlatform.setTextSize(20);
                 hockleyPlatform.setText(getString(R.string.text_platform_hockley, data.cancelReason + "."));
@@ -265,7 +264,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void toggleTrains(View view) {
-        Log.d("Toggle", "button press");
         if (index == 0) {
             index = 1;
             update();
