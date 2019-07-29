@@ -2,6 +2,8 @@ package uk.co.suskins.commutestatus;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -55,7 +57,8 @@ public class MainActivity extends AppCompatActivity {
 
         //Update App Text
         refresh();
-        //sendNotif();
+        toStratfordNotif();
+        toHockleyNotif();
     }
 
     @Override
@@ -102,22 +105,50 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void sendNotif() {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentTitle("Train Time Update")
-                .setContentText("The next train to Stratford is " + stratfordDetails.get(0).etd)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+    public void toHockleyNotif() {
+        if (!detailsInvalid(hockleyDetails)) {
+            Context context = getApplicationContext();
+            Intent notificationIntent = new Intent(context, MainActivity.class);
 
-        notificationManager.notify(notificationId++, builder.build());
+            notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-        builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentTitle("Train Time Update")
-                .setContentText("The next train to Hockley is " + hockleyDetails.get(0).etd)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+            PendingIntent intent = PendingIntent.getActivity(context, 0,
+                    notificationIntent, 0);
 
-        notificationManager.notify(notificationId++, builder.build());
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                    .setSmallIcon(R.drawable.ic_launcher_foreground)
+                    .setContentTitle("Hockley Update")
+                    .setContentText("The " + hockleyDetails.get(index).std + " train to Hockley is " + hockleyDetails.get(index).etd)
+                    .setContentIntent(intent)
+                    .setAutoCancel(true)
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+            notificationManager.notify(notificationId++, builder.build());
+        }
+    }
+
+    private void toStratfordNotif() {
+        if (!detailsInvalid(stratfordDetails)) {
+            Context context = getApplicationContext();
+            Intent notificationIntent = new Intent(context, MainActivity.class);
+
+            notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+            PendingIntent intent = PendingIntent.getActivity(context, 0,
+                    notificationIntent, 0);
+
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                    .setSmallIcon(R.drawable.ic_launcher_foreground)
+                    .setContentTitle("Stratford Update")
+                    .setContentText("The " + stratfordDetails.get(index).std + " train to Stratford is " + stratfordDetails.get(index).etd)
+                    .setContentIntent(intent)
+                    .setAutoCancel(true)
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+            notificationManager.notify(notificationId++, builder.build());
+        }
     }
 
     private void refresh() {
