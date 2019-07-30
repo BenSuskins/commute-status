@@ -5,11 +5,11 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -57,8 +57,8 @@ public class MainActivity extends AppCompatActivity {
 
         //Update App Text
         refresh();
-        toStratfordNotif();
-        toHockleyNotif();
+        //toStratfordNotif();
+        //toHockleyNotif();
     }
 
     @Override
@@ -161,7 +161,6 @@ public class MainActivity extends AppCompatActivity {
     private void update() {
         updateToHockley();
         updateToStratford();
-
     }
 
     private boolean detailsInvalid(ALRArrayOfServiceItemsWithCallingPoints_2 details) {
@@ -240,6 +239,7 @@ public class MainActivity extends AppCompatActivity {
         TextView stratfordPlatform = findViewById(R.id.stratfordPlatform);
         stratfordTime.setText(getString(R.string.text_to_stratford, "No Trains"));
         stratfordStatus.setText(getString(R.string.text_status_stratford, ""));
+        stratfordStatus.setBackgroundColor(Color.TRANSPARENT);
         stratfordPlatform.setText(getString(R.string.text_platform_stratford, ""));
     }
 
@@ -291,6 +291,7 @@ public class MainActivity extends AppCompatActivity {
         TextView hockleyStatus = findViewById(R.id.hockleyStatus);
         hockleyTime.setText(getString(R.string.text_to_hockley, "No Trains"));
         hockleyStatus.setText(getString(R.string.text_status_hockley, ""));
+        hockleyStatus.setBackgroundColor(Color.TRANSPARENT);
         hockleyPlatform.setText(getString(R.string.text_platform_hockley, ""));
     }
 
