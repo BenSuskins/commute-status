@@ -215,10 +215,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 stratfordStatus.setText(getString(R.string.text_status_stratford, data.etd));
                 stratfordPlatform.setTextSize(55);
-                if (data.platform == null) {
-                    stratfordPlatform.setText(getString(R.string.text_platform_hockley, "Platform Unknown"));
-                }
-                stratfordPlatform.setText(getString(R.string.text_platform_stratford, "Platform " + data.platform));
+                stratfordPlatform.setText(getString(R.string.text_platform_stratford, "Platform " + (data.platform == null ? "Unknown" : data.platform)));
             }
 
             //Update Background Colour
@@ -267,10 +264,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 hockleyStatus.setText(getString(R.string.text_status_hockley, data.etd));
                 hockleyPlatform.setTextSize(55);
-                if (data.platform == null) {
-                    hockleyPlatform.setText(getString(R.string.text_platform_hockley, "Platform Unknown"));
-                }
-                hockleyPlatform.setText(getString(R.string.text_platform_hockley, "Platform " + data.platform));
+                hockleyPlatform.setText(getString(R.string.text_platform_hockley, "Platform " + (data.platform == null ? "Unknown" : data.platform)));
             }
 
             //Update Background Colour
