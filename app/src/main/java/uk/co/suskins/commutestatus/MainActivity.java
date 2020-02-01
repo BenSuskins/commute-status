@@ -290,12 +290,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void toggleTrains(View view) {
-        if (index == 0) {
-            index = 1;
-            update();
-        } else if (index == 1) {
+        index++;
+        if (index > 3){
             index = 0;
-            update();
         }
+        update();
     }
 }
