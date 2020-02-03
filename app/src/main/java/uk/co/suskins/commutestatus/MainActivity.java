@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
     private void getToHockleyDetails() {
         try {
             ALRLDBServiceSoap service = new ALRLDBServiceSoap();
-            ALRStationBoardWithDetails_2 depBoard = service.GetDepBoardWithDetails(2, "SRA", "HOC", ALREnums.FilterType.to, 0, 0, new ALRAccessToken());
+            ALRStationBoardWithDetails_2 depBoard = service.GetDepBoardWithDetails(4, "SRA", "HOC", ALREnums.FilterType.to, 0, 0, new ALRAccessToken());
             hockleyDetails = depBoard.trainServices;
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
     private void getToStratfordDetails() {
         try {
             ALRLDBServiceSoap service = new ALRLDBServiceSoap();
-            ALRStationBoardWithDetails_2 depBoard = service.GetDepBoardWithDetails(2, "HOC", "SRA", ALREnums.FilterType.to, 0, 0, new ALRAccessToken());
+            ALRStationBoardWithDetails_2 depBoard = service.GetDepBoardWithDetails(4, "HOC", "SRA", ALREnums.FilterType.to, 0, 0, new ALRAccessToken());
             stratfordDetails = depBoard.trainServices;
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -291,7 +291,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void toggleTrains(View view) {
         index++;
-        if (index > 3){
+        if (index > 3) {
             index = 0;
         }
         update();
