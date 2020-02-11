@@ -12,4 +12,9 @@
     <string name="text_status_stratford">%1$s</string>
     <string name="channel_name">Train updates</string>
     <string name="channel_description">Updates on current train statuses</string>
+    <string name="action_set_work">Set Work Station</string>
+    <string name="action_set_home">Set Home Station</string>
+    <string name="work_crs">work_crs</string>
+    <string name="home_crs">home_crs</string>
+    <string name="preference_file_key">crs_prefs</string>
 </resources>

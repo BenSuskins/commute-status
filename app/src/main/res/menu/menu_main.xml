@@ -9,6 +9,14 @@
         app:showAsAction="never" />
     <item
         android:id="@+id/action_journeycheck"
-        android:orderInCategory="103"
+        android:orderInCategory="104"
         android:title="@string/action_journeycheck" />
+    <item
+        android:id="@+id/action_set_work"
+        android:orderInCategory="102"
+        android:title="@string/action_set_work" />
+    <item
+        android:id="@+id/action_set_home"
+        android:orderInCategory="103"
+        android:title="@string/action_set_home" />
 </menu>

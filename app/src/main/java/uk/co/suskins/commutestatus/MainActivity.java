@@ -1,24 +1,23 @@
 package uk.co.suskins.commutestatus;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import uk.co.suskins.darwin.ALRAccessToken;
 import uk.co.suskins.darwin.ALRArrayOfServiceItemsWithCallingPoints_2;
@@ -31,14 +30,15 @@ public class MainActivity extends AppCompatActivity {
     //Constants
     private static final String CANCELLED = "Cancelled";
     private static final String ON_TIME = "On time";
-    private static final String CHANNEL_ID = "Updates";
+    public static final int ROWS = 4;
 
     //Variables
-    private ALRArrayOfServiceItemsWithCallingPoints_2 hockleyDetails;
-    private ALRArrayOfServiceItemsWithCallingPoints_2 stratfordDetails;
+    SharedPreferences sharedPref;
+    private ALRArrayOfServiceItemsWithCallingPoints_2 homeDetails;
+    private ALRArrayOfServiceItemsWithCallingPoints_2 workDetails;
     private Integer index = 0;
-    private int notificationId = 0;
-    private NotificationManagerCompat notificationManager;
+    public String workStationCrs;
+    public String homeStationCrs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,14 +51,11 @@ public class MainActivity extends AppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        //Create Notification Channel
-        createNotificationChannel();
-        notificationManager = NotificationManagerCompat.from(this);
+        //Set Shared Preferences
+        sharedPref = super.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
         //Update App Text
         refresh();
-        //toStratfordNotif();
-        //toHockleyNotif();
     }
 
     @Override
@@ -80,87 +77,72 @@ public class MainActivity extends AppCompatActivity {
             refresh();
             return true;
         } else if (id == R.id.action_journeycheck) {
-            Uri uriUrl = Uri.parse("https://www.journeycheck.com/greateranglia/search?from=HOC&to=SRA");
+            Uri uriUrl = Uri.parse(String.format("http://ojp.nationalrail.co.uk/service/timesandfares/%s/%s/today/0700/dep", homeStationCrs, workStationCrs));
             Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
             startActivity(launchBrowser);
+            return true;
+        } else if (id == R.id.action_set_home) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Set Home Station");
+
+            final EditText input = new EditText(this);
+            input.setInputType(InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
+            input.setText(homeStationCrs);
+            builder.setView(input);
+
+            // Set up the buttons
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString(getString(R.string.home_crs), input.getText().toString());
+                    editor.apply();
+                    refresh();
+                }
+            });
+
+            builder.show();
+            return true;
+        } else if (id == R.id.action_set_work) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Set Work Station");
+
+            final EditText input = new EditText(this);
+            input.setInputType(InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
+            input.setText(workStationCrs);
+            builder.setView(input);
+
+            // Set up the buttons
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString(getString(R.string.work_crs), input.getText().toString());
+                    editor.apply();
+                    refresh();
+                }
+            });
+
+            builder.show();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = getString(R.string.channel_name);
-            String description = getString(R.string.channel_description);
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
-
-    public void toHockleyNotif() {
-        if (!detailsInvalid(hockleyDetails)) {
-            Context context = getApplicationContext();
-            Intent notificationIntent = new Intent(context, MainActivity.class);
-
-            notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-
-            PendingIntent intent = PendingIntent.getActivity(context, 0,
-                    notificationIntent, 0);
-
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                    .setSmallIcon(R.drawable.ic_launcher_foreground)
-                    .setContentTitle("Hockley Update")
-                    .setContentText("The " + hockleyDetails.get(index).std + " train to Hockley is " + hockleyDetails.get(index).etd)
-                    .setContentIntent(intent)
-                    .setAutoCancel(true)
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-            notificationManager.notify(notificationId++, builder.build());
-        }
-    }
-
-    private void toStratfordNotif() {
-        if (!detailsInvalid(stratfordDetails)) {
-            Context context = getApplicationContext();
-            Intent notificationIntent = new Intent(context, MainActivity.class);
-
-            notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-
-            PendingIntent intent = PendingIntent.getActivity(context, 0,
-                    notificationIntent, 0);
-
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                    .setSmallIcon(R.drawable.ic_launcher_foreground)
-                    .setContentTitle("Stratford Update")
-                    .setContentText("The " + stratfordDetails.get(index).std + " train to Stratford is " + stratfordDetails.get(index).etd)
-                    .setContentIntent(intent)
-                    .setAutoCancel(true)
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-            notificationManager.notify(notificationId++, builder.build());
-        }
-    }
-
     private void refresh() {
-        getToHockleyDetails();
-        getToStratfordDetails();
+        homeStationCrs = sharedPref.getString(getString(R.string.home_crs), "SRA");
+        workStationCrs = sharedPref.getString(getString(R.string.work_crs), "LST");
+
+        getToHomeDetails();
+        getToWorkDetails();
         index = 0;
         update();
     }
 
     private void update() {
-        updateToHockley();
-        updateToStratford();
+        updateToHome();
+        updateToWork();
     }
 
     private boolean detailsInvalid(ALRArrayOfServiceItemsWithCallingPoints_2 details) {
@@ -171,33 +153,33 @@ public class MainActivity extends AppCompatActivity {
         return (details.size() <= index);
     }
 
-    private void getToHockleyDetails() {
+    private void getToHomeDetails() {
         try {
             ALRLDBServiceSoap service = new ALRLDBServiceSoap();
-            ALRStationBoardWithDetails_2 depBoard = service.GetDepBoardWithDetails(4, "SRA", "HOC", ALREnums.FilterType.to, 0, 0, new ALRAccessToken());
-            hockleyDetails = depBoard.trainServices;
+            ALRStationBoardWithDetails_2 depBoard = service.GetDepBoardWithDetails(ROWS, workStationCrs, homeStationCrs, ALREnums.FilterType.to, 0, 0, new ALRAccessToken());
+            homeDetails = depBoard.trainServices;
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    private void getToStratfordDetails() {
+    private void getToWorkDetails() {
         try {
             ALRLDBServiceSoap service = new ALRLDBServiceSoap();
-            ALRStationBoardWithDetails_2 depBoard = service.GetDepBoardWithDetails(4, "HOC", "SRA", ALREnums.FilterType.to, 0, 0, new ALRAccessToken());
-            stratfordDetails = depBoard.trainServices;
+            ALRStationBoardWithDetails_2 depBoard = service.GetDepBoardWithDetails(ROWS, homeStationCrs, workStationCrs, ALREnums.FilterType.to, 0, 0, new ALRAccessToken());
+            workDetails = depBoard.trainServices;
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    private void updateToStratford() {
+    private void updateToWork() {
         //Check Details Valid
-        if (detailsInvalid(stratfordDetails)) {
+        if (detailsInvalid(workDetails)) {
             noTrainsStratford();
         } else {
             //Get Data
-            ALRServiceItemWithCallingPoints_2 data = stratfordDetails.get(index);
+            ALRServiceItemWithCallingPoints_2 data = workDetails.get(index);
 
             //Create Variables
             TextView stratfordTime = findViewById(R.id.stratfordTime);
@@ -211,11 +193,11 @@ public class MainActivity extends AppCompatActivity {
             if (data.filterLocationCancelled || data.isCancelled) {
                 stratfordStatus.setText(getString(R.string.text_status_stratford, CANCELLED));
                 stratfordPlatform.setTextSize(20);
-                stratfordPlatform.setText(getString(R.string.text_platform_stratford, data.cancelReason + "."));
+                stratfordPlatform.setText(getString(R.string.text_platform_stratford, String.format("%s.", data.cancelReason)));
             } else {
                 stratfordStatus.setText(getString(R.string.text_status_stratford, data.etd));
                 stratfordPlatform.setTextSize(55);
-                stratfordPlatform.setText(getString(R.string.text_platform_stratford, "Platform " + (data.platform == null ? "Unknown" : data.platform)));
+                stratfordPlatform.setText(getString(R.string.text_platform_stratford, String.format("Platform %s", data.platform == null ? "Unknown" : data.platform)));
             }
 
             //Update Background Colour
@@ -240,13 +222,13 @@ public class MainActivity extends AppCompatActivity {
         stratfordPlatform.setText(getString(R.string.text_platform_stratford, ""));
     }
 
-    private void updateToHockley() {
+    private void updateToHome() {
         //Check Details Valid
-        if (detailsInvalid(hockleyDetails)) {
+        if (detailsInvalid(homeDetails)) {
             noTrainsHockley();
         } else {
             //Get Data
-            ALRServiceItemWithCallingPoints_2 data = hockleyDetails.get(index);
+            ALRServiceItemWithCallingPoints_2 data = homeDetails.get(index);
 
             //Create Variables
             TextView hockleyTime = findViewById(R.id.hockleyTime);
@@ -260,11 +242,11 @@ public class MainActivity extends AppCompatActivity {
             if (data.filterLocationCancelled || data.isCancelled) {
                 hockleyStatus.setText(getString(R.string.text_status_hockley, CANCELLED));
                 hockleyPlatform.setTextSize(20);
-                hockleyPlatform.setText(getString(R.string.text_platform_hockley, data.cancelReason + "."));
+                hockleyPlatform.setText(getString(R.string.text_platform_hockley, String.format("%s.", data.cancelReason)));
             } else {
                 hockleyStatus.setText(getString(R.string.text_status_hockley, data.etd));
                 hockleyPlatform.setTextSize(55);
-                hockleyPlatform.setText(getString(R.string.text_platform_hockley, "Platform " + (data.platform == null ? "Unknown" : data.platform)));
+                hockleyPlatform.setText(getString(R.string.text_platform_hockley, String.format("Platform %s", data.platform == null ? "Unknown" : data.platform)));
             }
 
             //Update Background Colour
@@ -291,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void toggleTrains(View view) {
         index++;
-        if (index > 3) {
+        if (index >= ROWS) {
             index = 0;
         }
         update();
